@@ -300,7 +300,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
          while (st.hasMoreTokens()){
              String line = st.nextToken();
              int numero = 0;
-             String Cad_num = null;
+             String Cad_num = "";
+             String Cad_num_2 = "";
              for(int i = 0; i < PalabrasReservadas.size(); i++){
                  if(line.contains(PalabrasReservadas.get(i))){
                     //JOptionPane.showMessageDialog(null,"Existe JAASJDAS");
@@ -317,9 +318,10 @@ public class InterfazPrincipal extends javax.swing.JFrame {
              for(int i = 0; i< line.length(); i++){
                 
                 if(Character.isDigit(line.charAt(i))){
-                    numero = numero + Integer.parseInt(String.valueOf(line.charAt(i)));
-                    Cad_num =  myString.concat(String.valueOf(line.charAt(i)));
-                    JOptionPane.showMessageDialog(null,numero);
+                    Cad_num = Cad_num + String.valueOf(line.charAt(i));
+                    numero = Integer.parseInt(Cad_num);
+                   
+                    //JOptionPane.showMessageDialog(null,numero);
                 } 
             }
              Numeros.add(numero);  
