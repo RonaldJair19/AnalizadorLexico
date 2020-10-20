@@ -315,22 +315,37 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                  }
              }
              //JOptionPane.showMessageDialog(null,line);
+             
+            //Analizador de digitos
+             char detector = 'F';
              for(int i = 0; i< line.length(); i++){
-                
                 if(Character.isDigit(line.charAt(i))){
                     Cad_num = Cad_num + String.valueOf(line.charAt(i));
                     numero = Integer.parseInt(Cad_num);
-                   
+                    detector = 'C';
                     //JOptionPane.showMessageDialog(null,numero);
-                } 
+                }
+                if(i < (line.length()-1)){
+                     if(line.charAt(i) == '-' && Character.isDigit(line.charAt(i+1))){
+                        Cad_num = Cad_num + String.valueOf(line.charAt(i));
+                    }
+                }
+                if((Character.isDigit(line.charAt(i)) == false || i == line.length()-1) && detector == 'C'){
+                    Numeros.add(numero);
+                    detector = 'F';
+                    numero = 0;
+                    Cad_num = "";
+                }
+                
             }
-             Numeros.add(numero);  
+            //Numeros.add(numero);
+                     
              
              jTextArea_Resultado.append(line + (char)c + "n");
              
          }
          for(int i = 0; i < Numeros.size(); i++){
-             jTextArea_Numeros.append(String.valueOf(Numeros.get(i)));
+             jTextArea_Numeros.append(String.valueOf(Numeros.get(i))+ "\n");
          }
          //JOptionPane.showMessageDialog(null,lines);
         
