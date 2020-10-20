@@ -335,7 +335,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         for(int i = 0; i < PalabrasReservadas.size(); i++){
             jTextArea_PR.append(PalabrasReservadas.get(i) + "\n");
         }
-         //int lines = jTextArea_Codigo.getLineCount();
+        //Declaración de los tonkens
          StringTokenizer st;
          st = new StringTokenizer(jTextArea_Codigo.getText(),"\n");
          int c = 92;
@@ -347,19 +347,17 @@ public class InterfazPrincipal extends javax.swing.JFrame {
              int numero = 0;
              String Cad_num = "";
              String Variable = "";
-             for(int i = 0; i < PalabrasReservadas.size(); i++){
+             /*for(int i = 0; i < PalabrasReservadas.size(); i++){
                  if(line.contains(PalabrasReservadas.get(i))){
-                    //JOptionPane.showMessageDialog(null,"Existe JAASJDAS");
                     jTextArea_R_PR.append(PalabrasReservadas.get(i)+"\n");
                 }
-             }
+             }*/
              
              for(int i = 0; i < Operadores.size(); i++){
                  if(line.contains(Operadores.get(i))){
                      jTextArea_Operadores.append(Operadores.get(i)+ "\n");  
                  }
              }
-             //JOptionPane.showMessageDialog(null,line);
              
              char detector = 'F';
              for(int i = 0; i< line.length(); i++){
@@ -368,7 +366,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     Cad_num = Cad_num + String.valueOf(line.charAt(i));
                     numero = Integer.parseInt(Cad_num);
                     detector = 'C';
-                    //JOptionPane.showMessageDialog(null,numero);
                 }
                 if(i < (line.length()-1)){
                      if(line.charAt(i) == '-' && Character.isDigit(line.charAt(i+1))){
@@ -382,37 +379,42 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     Cad_num = "";
                 }
                 //Detector de variables
-                /*if(line.contains("\t")){
-                    i=i+1;
-                }*/
                 line  = line.replace("\t",(char)c + "t");
-                if((((line.charAt(i)>= 'A' && line.charAt(i)<= 'Z') || (line.charAt(i)>= 'a' && line.charAt(i)<= 'z')) || line.contains("_") || line.charAt(i) == c ) && line.charAt(i) != '='){
+                if((((line.charAt(i)>= 'A' && line.charAt(i)<= 'Z') || (line.charAt(i)>= 'a' && line.charAt(i)<= 'z')) || line.contains("_") || line.charAt(i) == c ) && line.charAt(i) != '=' && line.charAt(i) != ' '){
                     Variable = Variable + String.valueOf(line.charAt(i));
                     //JOptionPane.showMessageDialog(null,Variable);
-                    for(int j = 0; j < PalabrasReservadas.size(); j++){
+                    /*for(int j = 0; j < PalabrasReservadas.size(); j++){
                         if(Variable.contains(PalabrasReservadas.get(j))){
                         //jTextArea_R_PR.append(PalabrasReservadas.get(i)+"\n");
                         Variable = "";
                     }
+                }*/
+                    JOptionPane.showMessageDialog(null,Variable);
                     
                     
                 }
-                    //JOptionPane.showMessageDialog(null,Variable);
-                }
-                if(line.charAt(i) == ' ' || line.charAt(i) == '='){
+                if(line.charAt(i) == ' ' || line.charAt(i) == '=' || line.charAt(i) == ';' ){
                     Variable = Variable.replace((char)c + "t","");
-                    if(Variable != "" && comprobador(Variable)==false){
+                    if(Variable != "" && comprobador(Variable)==false && comprobador_reservadas(Variable) == false){
                         Identificadores.add(Variable);
                         jTextArea_Identificadores.append(Variable + "\n");
-                    } 
+                    }
+                    for(int k = 0; k < PalabrasReservadas.size(); k++){
+                        if(Variable.equals(PalabrasReservadas.get(k))){
+                            jTextArea_R_PR.append(PalabrasReservadas.get(k)+"\n");
+                        }
+                    }
                     Variable = "";
+                    
                 }
                 //Detector de tabulaciones
                  /*if(line.charAt(i) == '\t'){
                  //jTextArea_Resultado.append((char)c + "t");
                  }*/
                  //line  = line.replace("\t",(char)c + "t");
-                 line  = line.replace(" ","");
+                 if (i == line.length() -1){
+                     line  = line.replace(" ","");
+                 }
              }
              
                 //Numeros.add(numero);
@@ -437,6 +439,16 @@ public class InterfazPrincipal extends javax.swing.JFrame {
             }
         return bandera;
     }
+    public boolean comprobador_reservadas(String valor_actual){
+        boolean bandera = false;
+            for(int i = 0; i < PalabrasReservadas.size(); i++){
+                if(PalabrasReservadas.get(i).equals(valor_actual)){
+                    bandera = true;
+                }
+            }
+        return bandera;
+    }
+    
     /**
      * @param args the command line arguments
      */
