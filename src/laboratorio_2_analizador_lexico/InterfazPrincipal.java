@@ -51,7 +51,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextArea_Identificadores = new javax.swing.JTextArea();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTextArea7 = new javax.swing.JTextArea();
+        jTextArea_Operadores = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -158,9 +158,9 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         jTextArea_Identificadores.setRows(5);
         jScrollPane6.setViewportView(jTextArea_Identificadores);
 
-        jTextArea7.setColumns(20);
-        jTextArea7.setRows(5);
-        jScrollPane7.setViewportView(jTextArea7);
+        jTextArea_Operadores.setColumns(20);
+        jTextArea_Operadores.setRows(5);
+        jScrollPane7.setViewportView(jTextArea_Operadores);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -244,11 +244,12 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel10)))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -279,16 +280,22 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         PalabrasReservadas.add("double");
         PalabrasReservadas.add("for");
         PalabrasReservadas.add("while");
+        PalabrasReservadas.add("int");
         //Operadores y simbolos
         Operadores.add("+");
+        Operadores.add("(");
+        Operadores.add(")");
         Operadores.add("-");
         Operadores.add("/");
         Operadores.add("*");
         Operadores.add("==");
-        Operadores.add("and");
-        Operadores.add("or");
-        Operadores.add("not");
+        //Operadores.add("and");
+        Operadores.add("&&");
+        Operadores.add("||");
+        //Operadores.add("or");
+        //Operadores.add("not");
         Operadores.add("=");
+        Operadores.add("!=");
         for(int i = 0; i < PalabrasReservadas.size(); i++){
             jTextArea_PR.append(PalabrasReservadas.get(i) + "\n");
         }
@@ -297,12 +304,13 @@ public class InterfazPrincipal extends javax.swing.JFrame {
          st = new StringTokenizer(jTextArea_Codigo.getText(),"\n");
          int c = 92;
          
-        //Analisis de la cadena
+        //Analisis linea a linea del JtextArea Principal
+        
          while (st.hasMoreTokens()){
              String line = st.nextToken();
              int numero = 0;
              String Cad_num = "";
-             String Cad_num_2 = "";
+             String Variable = "";
              for(int i = 0; i < PalabrasReservadas.size(); i++){
                  if(line.contains(PalabrasReservadas.get(i))){
                     //JOptionPane.showMessageDialog(null,"Existe JAASJDAS");
@@ -312,15 +320,15 @@ public class InterfazPrincipal extends javax.swing.JFrame {
              
              for(int i = 0; i < Operadores.size(); i++){
                  if(line.contains(Operadores.get(i))){
-                     jTextArea_Identificadores.append(Operadores.get(i)+ "\n");  
+                     jTextArea_Operadores.append(Operadores.get(i)+ "\n");  
                  }
              }
              //JOptionPane.showMessageDialog(null,line);
              
-            //Analizador de digitos
              char detector = 'F';
              for(int i = 0; i< line.length(); i++){
-                if(Character.isDigit(line.charAt(i))){
+                //Analizador de digitos
+                 if(Character.isDigit(line.charAt(i)) && line.charAt(i-1) != '_'){
                     Cad_num = Cad_num + String.valueOf(line.charAt(i));
                     numero = Integer.parseInt(Cad_num);
                     detector = 'C';
@@ -337,17 +345,49 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     numero = 0;
                     Cad_num = "";
                 }
-                 //Detector de tabulaciones
+                //Detector de variables
+                /*if(line.contains("\t")){
+                    i=i+1;
+                }*/
+                line  = line.replace("\t",(char)c + "t");
+                if((((line.charAt(i)>= 'A' && line.charAt(i)<= 'Z') || (line.charAt(i)>= 'a' && line.charAt(i)<= 'z')) || line.contains("_") || line.charAt(i) == c ) && line.charAt(i) != '='){
+                    Variable = Variable + String.valueOf(line.charAt(i));
+                    JOptionPane.showMessageDialog(null,Variable);
+                    for(int j = 0; j < PalabrasReservadas.size(); j++){
+                        if(Variable.contains(PalabrasReservadas.get(j))){
+                        //jTextArea_R_PR.append(PalabrasReservadas.get(i)+"\n");
+                        Variable = "";
+                    }
+                    
+                    
+                }
+                    //JOptionPane.showMessageDialog(null,Variable);
+                }
+                if(line.charAt(i) == ' ' || line.charAt(i) == '='){
+                    Variable = Variable.replace((char)c + "t","");
+                    if(Variable != "" && comprobador(Variable)==false){
+                        Identificadores.add(Variable);
+                        jTextArea_Identificadores.append(Variable + "\n");
+                    } 
+                    Variable = "";
+                }
+                //Detector de tabulaciones
                  /*if(line.charAt(i) == '\t'){
                  //jTextArea_Resultado.append((char)c + "t");
                  }*/
-                 line  = line.replace("\t",(char)c + "t");
+                 //line  = line.replace("\t",(char)c + "t");
+                 line  = line.replace(" ","");
              }
-            //Numeros.add(numero);
-                     
+             
+                //Numeros.add(numero);
+            
+            
+            
+            
              //Imprime la cadena resultante
              
              jTextArea_Resultado.append(line + (char)c + "n");
+             
              
          }
          
@@ -358,7 +398,16 @@ public class InterfazPrincipal extends javax.swing.JFrame {
          //JOptionPane.showMessageDialog(null,lines);
         
     }//GEN-LAST:event_jButton_analizarActionPerformed
-
+    
+    public boolean comprobador(String valor_actual){
+        boolean bandera = false;
+            for(int i = 0; i < Identificadores.size(); i++){
+                if(Identificadores.get(i).equals(valor_actual)){
+                    bandera = true;
+                }
+            }
+        return bandera;
+    }
     /**
      * @param args the command line arguments
      */
@@ -416,10 +465,10 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTextArea jTextArea7;
     private javax.swing.JTextArea jTextArea_Codigo;
     private javax.swing.JTextArea jTextArea_Identificadores;
     private javax.swing.JTextArea jTextArea_Numeros;
+    private javax.swing.JTextArea jTextArea_Operadores;
     private javax.swing.JTextArea jTextArea_PR;
     private javax.swing.JTextArea jTextArea_R_PR;
     private javax.swing.JTextArea jTextArea_Resultado;
