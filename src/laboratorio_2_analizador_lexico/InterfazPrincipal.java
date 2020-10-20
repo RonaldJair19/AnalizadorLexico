@@ -296,7 +296,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
          StringTokenizer st;
          st = new StringTokenizer(jTextArea_Codigo.getText(),"\n");
          int c = 92;
-         //Analisis de la cadena
+         
+        //Analisis de la cadena
          while (st.hasMoreTokens()){
              String line = st.nextToken();
              int numero = 0;
@@ -308,10 +309,10 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     jTextArea_R_PR.append(PalabrasReservadas.get(i)+"\n");
                 }
              }
+             
              for(int i = 0; i < Operadores.size(); i++){
                  if(line.contains(Operadores.get(i))){
-                     jTextArea_Identificadores.append(Operadores.get(i)+ "\n");
-                     
+                     jTextArea_Identificadores.append(Operadores.get(i)+ "\n");  
                  }
              }
              //JOptionPane.showMessageDialog(null,line);
@@ -336,14 +337,21 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     numero = 0;
                     Cad_num = "";
                 }
-                
-            }
+                 //Detector de tabulaciones
+                 /*if(line.charAt(i) == '\t'){
+                 //jTextArea_Resultado.append((char)c + "t");
+                 }*/
+                 line  = line.replace("\t",(char)c + "t");
+             }
             //Numeros.add(numero);
                      
+             //Imprime la cadena resultante
              
              jTextArea_Resultado.append(line + (char)c + "n");
              
          }
+         
+         //Imprimir los numeros detectados
          for(int i = 0; i < Numeros.size(); i++){
              jTextArea_Numeros.append(String.valueOf(Numeros.get(i))+ "\n");
          }
